@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,9 +28,8 @@ import com.fdkservice.security.payload.request.LoginRequest;
 import com.fdkservice.security.payload.request.SignupRequest;
 import com.fdkservice.security.payload.response.JwtResponse;
 import com.fdkservice.security.payload.response.MessageResponse;
-import com.fdkservice.security.repository.RoleRepository;
-import com.fdkservice.security.repository.UserRepository;
 import com.fdkservice.security.security.jwt.JwtUtils;
+import com.fdkservice.security.security.services.AuthService;
 import com.fdkservice.security.security.services.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -38,18 +38,18 @@ import com.fdkservice.security.security.services.UserDetailsImpl;
 public class AuthController {
 	@Autowired
 	AuthenticationManager authenticationManager;
-
+	
 	@Autowired
-	UserRepository userRepository;
-
-	@Autowired
-	RoleRepository roleRepository;
+	AuthService authService;
 
 	@Autowired
 	PasswordEncoder encoder;
 
 	@Autowired
 	JwtUtils jwtUtils;
+	
+	@Autowired
+	MessageSource messageSource;
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -74,16 +74,16 @@ public class AuthController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+		if (authService.existsUserByUsername(signUpRequest.getUsername())) {
 			return ResponseEntity
 					.badRequest()
-					.body(new MessageResponse("Error: Username is already taken!"));
+					.body(new MessageResponse(messageSource.getMessage("USER_EXIST", null, null, null)));
 		}
 
-		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+		if (authService.existsUserByEmail(signUpRequest.getEmail())) {
 			return ResponseEntity
 					.badRequest()
-					.body(new MessageResponse("Error: Email is already in use!"));
+					.body(new MessageResponse(messageSource.getMessage("EMAIL_USED", null, null, null)));
 		}
 
 		// Create new user's account
@@ -95,35 +95,28 @@ public class AuthController {
 		Set<Role> roles = new HashSet<>();
 
 		if (strRoles == null) {
-			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+			Role userRole = authService.findRoleByName(ERole.ROLE_USER, messageSource.getMessage("ROLE_NOT_FOUND", null, null, null));
 			roles.add(userRole);
 		} else {
 			strRoles.forEach(role -> {
 				switch (role) {
 				case "admin":
-					Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					Role adminRole = authService.findRoleByName(ERole.ROLE_ADMIN, messageSource.getMessage("ROLE_NOT_FOUND", null, null, null));
 					roles.add(adminRole);
-
 					break;
 				case "mod":
-					Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					Role modRole = authService.findRoleByName(ERole.ROLE_MODERATOR, messageSource.getMessage("ROLE_NOT_FOUND", null, null, null));
 					roles.add(modRole);
-
 					break;
 				default:
-					Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					Role userRole = authService.findRoleByName(ERole.ROLE_USER, messageSource.getMessage("ROLE_NOT_FOUND", null, null, null));
 					roles.add(userRole);
 				}
 			});
 		}
 
 		user.setRoles(roles);
-		userRepository.save(user);
-
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+		authService.saveUser(user);
+		return ResponseEntity.ok(new MessageResponse(messageSource.getMessage("USER_CREATE_SUCCESS", null, null, null)));
 	}
 }

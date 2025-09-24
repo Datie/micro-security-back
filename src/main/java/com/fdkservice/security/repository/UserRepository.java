@@ -10,6 +10,8 @@ import com.fdkservice.security.models.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByUsername(String username);
+	
+	void deleteByUsername(String userName);
 
 	Boolean existsByUsername(String username);
 
