@@ -2,6 +2,10 @@ package com.fdkservice.security.payload.response;
 
 import java.util.List;
 
+/**
+ * @author Ian
+ * @description 
+ */
 public class JwtResponse {
 	private String token;
 	private String type = "Bearer";

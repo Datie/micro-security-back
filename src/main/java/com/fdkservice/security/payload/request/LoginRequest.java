@@ -1,5 +1,9 @@
 package com.fdkservice.security.payload.request;
 
+/**
+ * @author Ian
+ * @description 
+ */
 import jakarta.validation.constraints.NotBlank;
 
 public class LoginRequest {

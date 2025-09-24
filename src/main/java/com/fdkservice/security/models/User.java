@@ -8,6 +8,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+/**
+ * @author Ian
+ * @description Database configuration for Spring Boot Security
+ */
 @Entity
 @Table(	name = "users", 
 		uniqueConstraints = { 

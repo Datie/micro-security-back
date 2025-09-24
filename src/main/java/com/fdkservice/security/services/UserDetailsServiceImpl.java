@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import com.fdkservice.security.models.User;
 import com.fdkservice.security.repository.UserRepository;
 
+/**
+ * @author Ian
+ * @description 
+ */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired

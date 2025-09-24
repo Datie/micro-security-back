@@ -2,6 +2,10 @@ package com.fdkservice.security.models;
 
 import jakarta.persistence.*;
 
+/**
+ * @author Ian
+ * @description Database configuration for Spring Boot Security
+ */
 @Entity
 @Table(name = "roles")
 public class Role {

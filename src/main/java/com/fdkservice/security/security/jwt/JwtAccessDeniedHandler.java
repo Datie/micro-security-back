@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author shuang.kou
+ * @author Ian
  * @description AccessDeineHandler To handle the exception when the user authorized visits the resource which is not for the user
  */
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {

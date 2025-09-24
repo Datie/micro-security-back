@@ -21,6 +21,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * @author Ian
+ * @description Filter for Spring Boot Security
+ */
 public class AuthTokenFilter extends OncePerRequestFilter {
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;

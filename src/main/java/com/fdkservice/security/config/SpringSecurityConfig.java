@@ -19,6 +19,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.fdkservice.security.common.SecurityConstants;
 
+/**
+ * @author Ian
+ * @description Configuration for Spring Boot Security
+ */
+
 @Configuration
 public class SpringSecurityConfig {
 

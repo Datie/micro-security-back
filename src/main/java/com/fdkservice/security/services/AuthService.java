@@ -13,6 +13,10 @@ import com.fdkservice.security.models.User;
 import com.fdkservice.security.repository.RoleRepository;
 import com.fdkservice.security.repository.UserRepository;
 
+/**
+ * @author Ian
+ * @description 
+ */
 @Service
 public class AuthService {
 	

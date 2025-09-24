@@ -4,6 +4,10 @@ import java.util.Set;
 
 import jakarta.validation.constraints.*;
  
+/**
+ * @author Ian
+ * @description 
+ */
 public class SignupRequest {
     @NotBlank
     @Size(min = 3, max = 20)

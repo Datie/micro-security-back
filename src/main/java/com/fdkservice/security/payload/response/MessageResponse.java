@@ -1,5 +1,9 @@
 package com.fdkservice.security.payload.response;
 
+/**
+ * @author Ian
+ * @description 
+ */
 public class MessageResponse {
 	private String message;
 

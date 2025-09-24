@@ -9,8 +9,6 @@ import javax.crypto.SecretKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +20,10 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+/**
+ * @author Ian
+ * @description The token provider for Spring Boot Security
+ */
 @Component
 public class JwtTokenProvider {
 	

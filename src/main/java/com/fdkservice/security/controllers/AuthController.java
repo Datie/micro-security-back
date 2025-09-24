@@ -32,6 +32,11 @@ import com.fdkservice.security.services.UserDetailsImpl;
 
 import jakarta.validation.Valid;
 
+/**
+ * @author Ian
+ * @description Controller for login and signup
+ */
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
