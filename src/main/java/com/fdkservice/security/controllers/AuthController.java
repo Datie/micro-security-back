@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +26,11 @@ import com.fdkservice.security.payload.request.LoginRequest;
 import com.fdkservice.security.payload.request.SignupRequest;
 import com.fdkservice.security.payload.response.JwtResponse;
 import com.fdkservice.security.payload.response.MessageResponse;
-import com.fdkservice.security.security.jwt.JwtUtils;
-import com.fdkservice.security.security.services.AuthService;
-import com.fdkservice.security.security.services.UserDetailsImpl;
+import com.fdkservice.security.security.jwt.JwtTokenProvider;
+import com.fdkservice.security.services.AuthService;
+import com.fdkservice.security.services.UserDetailsImpl;
+
+import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -46,7 +46,7 @@ public class AuthController {
 	PasswordEncoder encoder;
 
 	@Autowired
-	JwtUtils jwtUtils;
+	JwtTokenProvider jwtTokenProvider;
 	
 	@Autowired
 	MessageSource messageSource;
@@ -58,7 +58,8 @@ public class AuthController {
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtUtils.generateJwtToken(authentication);
+		
+		String jwt = jwtTokenProvider.generateToken(authentication, false);
 		
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
 		List<String> roles = userDetails.getAuthorities().stream()

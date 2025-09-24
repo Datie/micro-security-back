@@ -1,4 +1,4 @@
-package com.fdkservice.security.security.services;
+package com.fdkservice.security.services;
 
 import java.util.Collection;
 import java.util.List;

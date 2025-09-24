@@ -1,4 +1,4 @@
-package com.fdkservice.security.security.services;
+package com.fdkservice.security.services;
 
 import java.util.List;
 
@@ -25,6 +25,10 @@ public class AuthService {
 		Role userRole = roleRepository.findByName(roleName)
 				.orElseThrow(() -> new RuntimeException(errorMsg));
 		return userRole;
+	}
+	
+	public User findUserByName(String userName) {
+		return userRepository.findByUsername(userName).get();
 	}
 	
 	public boolean existsUserByUsername(String userName) {
