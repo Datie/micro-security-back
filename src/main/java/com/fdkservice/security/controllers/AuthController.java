@@ -58,24 +58,34 @@ public class AuthController {
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+		Authentication authentication = null;
+		try {
+			authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+		} catch(RuntimeException e) {
+			return ResponseEntity.badRequest().body(new MessageResponse(messageSource.getMessage("LOGIN_WRONG", null, null, null)));
+		}
+		if(authentication.isAuthenticated()) {
+			System.out.println("---------------authenticated");
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			
+			String jwt = jwtTokenProvider.generateToken(authentication, false);
+			
+			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
+			List<String> roles = userDetails.getAuthorities().stream()
+					.map(item -> item.getAuthority())
+					.collect(Collectors.toList());
 
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+			return ResponseEntity.ok(new JwtResponse(jwt, 
+													 userDetails.getId(), 
+													 userDetails.getUsername(), 
+													 userDetails.getEmail(), 
+													 roles));
+		} else {
+			System.out.println("---------------not authenticated");
+			return ResponseEntity.badRequest().body(new MessageResponse(messageSource.getMessage("LOGIN_WRONG", null, null, null)));
+		}
 		
-		String jwt = jwtTokenProvider.generateToken(authentication, false);
-		
-		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
-		List<String> roles = userDetails.getAuthorities().stream()
-				.map(item -> item.getAuthority())
-				.collect(Collectors.toList());
-
-		return ResponseEntity.ok(new JwtResponse(jwt, 
-												 userDetails.getId(), 
-												 userDetails.getUsername(), 
-												 userDetails.getEmail(), 
-												 roles));
 	}
 
 	@PostMapping("/signup")
